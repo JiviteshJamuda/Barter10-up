@@ -9,6 +9,7 @@ export default class MyBarters extends React.Component {
         super();
         this.state={
             userId : firebase.auth().currentUser.email,
+            userName : "",
             allBarters : [],
         }
     }
@@ -22,7 +23,51 @@ export default class MyBarters extends React.Component {
                 })
             })
         })
-        console.log(this.state.allBarters)
+
+        await db.collection("users").where("email_id", "==", this.state.userId).get()
+        .then(snapshot=>{
+            snapshot.forEach(doc=>{
+                this.setState({ userName : doc.data().first_name + " " + doc.data().last_name })
+            })
+        })
+        console.log(this.state.userName)
+    }
+
+    sendNotification = (details, exchangeStatus)=>{
+        var requestId = details.request_id;
+        var exchangerId = details.user_id;
+        db.collection("all_notification").where("request_id", "==", requestId).where("user_id", "==", exchangerId).get()
+        .then(snapshot=>{
+            snapshot.forEach(doc=>{
+                var message = "";
+                if (exchangeStatus === "Item Sent"){
+                    message = this.state.userName + " sent you the item";
+                } else {
+                    message = this.state.userName + " has shown interest in exchanging the item";
+                }
+                db.collection("all_notification").doc(doc.id).update({
+                    message : message,
+                    notification_status : "unread",
+                    date : firebase.firestore.FieldValue.serverTimestamp(),
+                })
+            })
+        })
+    }
+
+    sendItem = (details)=>{
+        if(details.exchange_status === "Item Sent"){
+            var requestStatus = "Barter Interested";
+            db.collection("my_barters").doc(details.doc_id).update({
+                exchange_status : "Barter Interested"
+            })
+            this.sendNotification(details, requestStatus);
+        } else {
+            var requestStatus = "Item Sent";
+            db.collection("my_barters").doc(details.doc_id).update({
+                exchange_status : "Item Sent"
+            })
+            this.sendNotification(details, requestStatus);
+        }
     }
 
     componentDidMount(){
@@ -39,8 +84,8 @@ export default class MyBarters extends React.Component {
             subtitle={item.exchanger_name}
             titleStyle={{ color: 'black', fontWeight: 'bold' }}
             rightElement={
-                <TouchableOpacity style={styles.button}>
-                    <Text>Exchange</Text>
+                <TouchableOpacity style={styles.button} onPress={()=>{ this.sendItem(item) }}>
+                    <Text>{ item.exchange_status === "Item Sent" ? "Item Sent" : "Send Item"}</Text>
                 </TouchableOpacity>
             }
             bottomDivider

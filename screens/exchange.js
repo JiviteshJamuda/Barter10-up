@@ -28,7 +28,7 @@ export default class Exchange extends React.Component {
         db.collection("requests").add({
             item : this.state.item,
             description : this.state.description,
-            requestId : id, 
+            request_id : id, 
             user_id : this.state.userId,
         });
         return(alert("item added"));

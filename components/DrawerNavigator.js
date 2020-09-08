@@ -16,12 +16,14 @@ import SidebarMenu from "./SidebarMenu";
 import { createDrawerNavigator } from "react-navigation-drawer";
 import Settings from "../screens/settings";
 import MyBarters from "../screens/myBarters";
+import Notifications from "../screens/notifications";
 
 export const DrawerNavigator = createDrawerNavigator(
     {
         Home : {screen: BottomTabNavigator},
         Settings : {screen: Settings},
         MyBarters : {screen : MyBarters},
+        Notifications : {screen : Notifications},
     },
     {
         contentComponent: SidebarMenu

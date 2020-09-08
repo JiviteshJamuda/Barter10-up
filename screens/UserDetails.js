@@ -10,18 +10,20 @@ export default class UserDetails extends React.Component {
         this.state={
             userId : firebase.auth().currentUser.email,
             exchangerId : this.props.navigation.getParam("details")["user_id"],
-            requestId : this.props.navigation.getParam("details")["requestId"],
+            requestId : this.props.navigation.getParam("details")["request_id"],
             item : this.props.navigation.getParam("details")["item"],
             description : this.props.navigation.getParam("details")["description"],
             exchangerName : "",
             exchangerContact : "",
             exchangerAddress : "",
             requestDocId : "",
+            userName : "",
+            exchangeDocId : "",
         }
     }
 
-    getUserDetails = ()=>{
-        db.collection("users").where("email_id", "==", this.state.exchangerId).get()
+    getUserDetails = async()=>{
+        await db.collection("users").where("email_id", "==", this.state.exchangerId).get()
         .then(snapshot=>{
             snapshot.forEach(doc=>{
                 this.setState({
@@ -31,8 +33,16 @@ export default class UserDetails extends React.Component {
                 })
             })
         })
+        await db.collection("users").where("email_id", "==", this.state.userId).get()
+        .then(snapshot=>{
+            snapshot.forEach(doc=>{
+                this.setState({
+                    userName : doc.data().first_name + " " + doc.data().last_name
+                })
+            })
+        })
 
-        db.collection("requests").where("requestId", "==", this.state.requestId).get()
+        await db.collection("requests").where("request_id", "==", this.state.requestId).get()
         .then(snapshot=>{
             snapshot.forEach(doc=>{
                 this.setState({
@@ -42,16 +52,31 @@ export default class UserDetails extends React.Component {
         })
     }
 
-    addBarters = ()=>{
-        db.collection("my_barters").add({
-            item : this.state.item,
-            exchanger_name : this.state.exchangerName,
+    addBarters = async()=>{
+        await db.collection("my_barters").add({
+            item              : this.state.item,
+            exchanger_name    : this.state.exchangerName,
             exchanger_contact : this.state.exchangerContact,
             exchanger_address : this.state.exchangerAddress,
-            exchanger_id : this.state.userId,
-            exchange_status : "interested",
-            user_id : this.state.userId,
-            description : this.state.description,
+            exchanger_id      : this.state.exchangerId,
+            exchange_status   : "Barter Interested",
+            user_id           : this.state.userId,
+            description       : this.state.description,
+            doc_id            : this.state.requestDocId,
+            request_id        : this.state.requestId,
+        })
+    }
+
+    addNotification = async()=>{
+        var message = this.state.userName + " has shown interest";
+        await db.collection("all_notification").add({
+            user_id             : this.state.userId,
+            exchanger_id        : this.state.exchangerId,
+            date                : firebase.firestore.FieldValue.serverTimestamp(),
+            message             : message,
+            item                : this.state.item,
+            notification_status : "unread",
+            request_id          : this.state.requestId,
         })
     }
 
@@ -73,9 +98,20 @@ export default class UserDetails extends React.Component {
                 <Text style={styles.text}>Exchanger Address : {this.state.exchangerAddress}</Text>
                 <Text style={styles.text}>Exchanger ID : {this.state.exchangerId}</Text>
                 <View style={{justifyContent:"center", flex:1,alignItems:"center"}}>
-                    <TouchableOpacity style={styles.button} onPress={()=>{ this.addBarters(); return alert("exchanged") }}>
+                    { this.state.requestDocId === "" ? 
+                    (
+                    <View></View>) : 
+                    (<TouchableOpacity style={styles.button} 
+                        onPress={()=>{
+                            this.addBarters(); 
+                            this.addNotification();
+                            this.props.navigation.navigate("MyBarters");
+                            console.log(this.state.requestDocId)
+                        }}
+                    >
                         <Text style={styles.buttonText}>Exchange</Text>
-                    </TouchableOpacity>
+                    </TouchableOpacity>)}
+                    
                 </View>
             </ScrollView>
         )

@@ -2,7 +2,8 @@ import React from "react";
 import { Text, View, TouchableOpacity, StyleSheet, ScrollView, FlatList } from "react-native";
 import db from "../config";
 import firebase from "firebase";
-import { ListItem, Header } from 'react-native-elements'
+import { ListItem, Header } from 'react-native-elements';
+import MyHeader from "../components/MyHeader";
 
 export default class MyBarters extends React.Component {
     constructor(){
@@ -96,9 +97,7 @@ export default class MyBarters extends React.Component {
     render(){
         return(
             <ScrollView>
-                <Header
-                    centerComponent={{text:"My Barters", style:{fontSize:30,fontWeight:"bold"}}}
-                />
+                <MyHeader title="My Barters" navigation={this.props.navigation}/>
                 <FlatList
                     data={this.state.allBarters}
                     renderItem={this.renderItem}

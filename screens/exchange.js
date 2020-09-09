@@ -12,6 +12,7 @@ import {
 } from 'react-native';
 import db from "../config";
 import firebase from "firebase"
+import MyHeader from "../components/MyHeader"
 
 export default class Exchange extends React.Component {
     constructor(){
@@ -40,7 +41,8 @@ export default class Exchange extends React.Component {
 
     render(){
         return(
-            <View style={{flex:1}}>
+            <View>
+                <MyHeader title="Request Item" navigation={this.props.navigation}/>
                 <KeyboardAvoidingView style={styles.keyBoardStyle} behavior="padding">
                 <TextInput style={styles.formTextInput}
                     placeholder="Item name"
@@ -81,7 +83,6 @@ export default class Exchange extends React.Component {
 
 const styles = StyleSheet.create({
     keyBoardStyle : {
-      flex:1,
       alignItems:'center',
       justifyContent:'center'
     },

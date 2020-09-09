@@ -3,6 +3,7 @@ import { Text, View, StyleSheet, FlatList, TouchableOpacity, ScrollView } from "
 import { ListItem, Header } from "react-native-elements";
 import db from "../config";
 import firebase from "firebase";
+import MyHeader from "../components/MyHeader";
 
 export default class Notifications extends React.Component {
     constructor(){
@@ -47,9 +48,7 @@ export default class Notifications extends React.Component {
     render(){
         return(
             <ScrollView>
-                <Header
-                    centerComponent={{text:"Notifications", style:{fontSize : 25, fontWeight : "bold"}}}
-                />
+                <MyHeader title="Notifications" navigation={this.props.navigation}/>
                 <FlatList
                     data={this.state.allNotifications}
                     keyExtractor={this.keyExtractor}

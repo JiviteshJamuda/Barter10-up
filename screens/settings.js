@@ -11,6 +11,7 @@ import {
 ScrollView} from 'react-native';
 import firebase from "firebase";
 import db from "../config";
+import MyHeader from "../components/MyHeader";
 
 export default class Settings extends React.Component {
     constructor(){
@@ -61,9 +62,12 @@ export default class Settings extends React.Component {
 
     render(){
         return(
-            <View style={styles.container}>
-                <View style={styles.formContainer}>
-                    <Text style={{fontSize:40, fontWeight:"bold"}}>Settings</Text>
+            <View>
+                <View>
+                    <MyHeader title="Settings" navigation={this.props.navigation}/>
+                </View>
+            <View style={styles.container}>               
+                <View style={styles.formContainer}>                   
                     <TextInput style={styles.formTextInput}
                         placeholder="First Name"
                         maxLength={15}
@@ -113,13 +117,13 @@ export default class Settings extends React.Component {
                     </TouchableOpacity>
                 </View>
             </View>
+            </View>
         )
     }
 }
 
 const styles = StyleSheet.create({
     container : {
-      flex:1,
       alignItems: 'center',
       justifyContent: 'center'
     },

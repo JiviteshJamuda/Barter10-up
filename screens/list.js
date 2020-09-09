@@ -14,6 +14,7 @@ import {
 import db from "../config";
 import firebase from "firebase";
 import { ListItem } from 'react-native-elements'
+import MyHeader from "../components/MyHeader";
 
 export default class List extends React.Component {
     constructor(){
@@ -70,6 +71,7 @@ export default class List extends React.Component {
         return(
           <View style={{flex:1}}>
             <View style={{flex:1}}>
+              <MyHeader title="Exchange Items" navigation={this.props.navigation}/>
               {
                 this.state.requests.length === 0
                 ?(

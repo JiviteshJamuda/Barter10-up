@@ -35,11 +35,12 @@ export default class Login extends React.Component {
           firebase.auth().createUserWithEmailAndPassword(emailId, password)
           .then(()=>{
             db.collection('users').add({
-              first_name:this.state.firstName,
-              last_name:this.state.lastName,
-              contact:this.state.contact,
-              email_id:this.state.emailId,
-              address:this.state.address
+              first_name          : this.state.firstName,
+              last_name           : this.state.lastName,
+              contact             : this.state.contact,
+              email_id            : this.state.emailId,
+              address             : this.state.address,
+              isItemRequestActive : false,
             })
             return alert(
                  'User Added Successfully',

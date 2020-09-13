@@ -4,10 +4,11 @@ import { ListItem, Header } from "react-native-elements";
 import db from "../config";
 import firebase from "firebase";
 import MyHeader from "../components/MyHeader";
+import SwipeableFlatlist from "../components/SwipeableFlatlist";
 
 export default class Notifications extends React.Component {
-    constructor(){
-        super();
+    constructor(props){
+        super(props);
         this.state={
             userId : firebase.auth().currentUser.email,
             allNotifications : [],
@@ -48,12 +49,22 @@ export default class Notifications extends React.Component {
     render(){
         return(
             <ScrollView>
-                <MyHeader title="Notifications" navigation={this.props.navigation}/>
-                <FlatList
-                    data={this.state.allNotifications}
-                    keyExtractor={this.keyExtractor}
-                    renderItem={this.renderItem}
-                />
+                <View>
+                    <MyHeader title="Notifications" navigation={this.props.navigation}/>
+                </View>
+                <View>
+                    {
+                        this.state.allNotifications.length === 0 ?
+                        (
+                            <View style={{flex : 1, justifyContent : "center", alignItems : "center"}}>
+                                <Text style={{fontSize : 20}}>You have no notifications</Text>
+                            </View>
+                        ) :
+                        (
+                            <SwipeableFlatlist allNotifications={this.state.allNotifications}/>
+                        )
+                    }
+                </View>
             </ScrollView>
         )
     }

@@ -13,10 +13,11 @@ export default class Notifications extends React.Component {
             userId : firebase.auth().currentUser.email,
             allNotifications : [],
         };
+        this.notificationsRef = null;
     }
 
     getNotifications = async()=>{
-        await db.collection("all_notification").where("notification_status", "==", "unread").where("exchanger_id", "==", this.state.userId)
+        this.notificationsRef = await db.collection("all_notification").where("notification_status", "==", "unread").where("exchanger_id", "==", this.state.userId)
         .onSnapshot(snapshot=>{
             var allNotifications = [];
             snapshot.docs.map(doc=>{
@@ -30,6 +31,10 @@ export default class Notifications extends React.Component {
 
     componentDidMount(){
         this.getNotifications();
+    }
+
+    componentWillUnmount(){
+        this.notificationsRef();
     }
 
     keyExtractor = (item, index) => index.toString()

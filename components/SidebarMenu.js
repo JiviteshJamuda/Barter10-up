@@ -16,8 +16,8 @@ import { Avatar } from "react-native-elements";
 import * as ImagePicker from 'expo-image-picker';
 
 export default class SidebarMenu extends React.Component {
-    constructor(){
-        super();
+    constructor(props){
+        super(props);
         this.state={
           image : "",
           userId : firebase.auth().currentUser.email,
@@ -111,3 +111,29 @@ export default class SidebarMenu extends React.Component {
         )
     }
 }
+
+var styles = StyleSheet.create({
+  container : {
+    flex:1
+  },
+  drawerItemsContainer:{
+    flex:0.8
+  },
+  logOutContainer : {
+    flex:0.2,
+    justifyContent:'flex-end',
+    paddingBottom:30
+  },
+  logOutButton : {
+    height:30,
+    width:'100%',
+    justifyContent:'center',
+    padding:10
+  },
+  logOutText:{
+    fontSize: 30,
+    fontWeight:'bold'
+  },
+  imageContainer: { flex: 0.75, width: "40%", height: "20%", marginLeft: 20, marginTop: 30, borderRadius: 40, },
+
+})

@@ -34,7 +34,7 @@ export default class Exchange extends React.Component {
         await db.collection("requests").where("user_id", "==", this.state.userId).get()
         .then(snapshot=>{
           snapshot.forEach(doc=>{
-            if (doc.data().book_status !== "recieved") {
+            if (doc.data().item_status !== "recieved") {
               this.setState({
                 requestId : doc.data().request_id,
                 requestedItem : doc.data().item,
